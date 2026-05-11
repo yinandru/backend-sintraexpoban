@@ -13,7 +13,7 @@ import {
 
 import { FileInterceptor } from '@nestjs/platform-express';
 import { NoticiasService } from './noticias.service';
-import { diskStorage } from 'multer';
+import { storage } from '../cloudinary/cloudinary.storage';
 import { AuthGuard } from '../auth/auth.guard';
 
 @Controller('noticias')
@@ -31,22 +31,23 @@ export class NoticiasController {
   @Post()
   @UseInterceptors(
     FileInterceptor('imagen', {
-      storage: diskStorage({
+      storage /* : diskStorage({
         destination: './uploads',
         filename: (req, file, cb) => {
           const nombre = Date.now() + '-' + file.originalname;
           cb(null, nombre);
         },
-      }),
+      }), */,
     }),
   )
   crear(@UploadedFile() file: any, @Body() body: any) {
-    const imagenUrl = file
-      ? `http://localhost:3000/uploads/${file.filename}`
-      : null;
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
+    const imagenUrl = file ? file.path : null;
 
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
     return this.noticiasService.create({
       ...body,
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
       imagen: imagenUrl,
     });
   }
@@ -63,13 +64,7 @@ export class NoticiasController {
   @Put(':id')
   @UseInterceptors(
     FileInterceptor('imagen', {
-      storage: diskStorage({
-        destination: './uploads',
-        filename: (req, file, cb) => {
-          const nombre = Date.now() + '-' + file.originalname;
-          cb(null, nombre);
-        },
-      }),
+      storage,
     }),
   )
   update(
@@ -77,6 +72,14 @@ export class NoticiasController {
     @UploadedFile() file: Express.Multer.File,
     @Body() body,
   ) {
-    return this.noticiasService.update(id, body, file);
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
+    const imagenUrl = file ? file.path : body.imagen;
+
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
+    return this.noticiasService.update(id, {
+      ...body,
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+      imagen: imagenUrl,
+    });
   }
 }

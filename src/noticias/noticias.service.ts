@@ -27,25 +27,26 @@ export class NoticiasService {
     return this.noticiaRepo.delete(id);
   }
 
-  async update(id: number, data: Partial<Noticia>, file?: Express.Multer.File) {
+  async update(id: number, data: Partial<Noticia>) {
     const noticia = await this.noticiaRepo.findOneBy({ id });
 
     if (!noticia) {
       throw new Error('Noticia no encontrada');
     }
 
-    // ✅ validar antes de asignar
+    // ✅ título
     if (data.titulo !== undefined) {
       noticia.titulo = data.titulo;
     }
 
+    // ✅ contenido
     if (data.contenido !== undefined) {
       noticia.contenido = data.contenido;
     }
 
-    // 🔥 imagen
-    if (file) {
-      noticia.imagen = `http://localhost:3000/uploads/${file.filename}`;
+    // ✅ imagen CLOUDINARY
+    if (data.imagen !== undefined) {
+      noticia.imagen = data.imagen;
     }
 
     return this.noticiaRepo.save(noticia);

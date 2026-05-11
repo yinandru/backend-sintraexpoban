@@ -9,13 +9,16 @@ import { DirectivosModule } from './directivos/directivos.module';
     DirectivosModule,
     TypeOrmModule.forRoot({
       type: 'postgres',
-      host: 'localhost',
-      port: 5432,
-      username: 'postgres',
-      password: 'datos',
-      database: 'sintraexpoban',
+
+      url: process.env.DATABASE_URL,
+
       autoLoadEntities: true,
-      synchronize: true, // ⚠️ solo desarrollo
+
+      synchronize: true,
+
+      ssl: {
+        rejectUnauthorized: false,
+      },
     }),
 
     NoticiasModule,
