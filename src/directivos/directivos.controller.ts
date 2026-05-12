@@ -63,13 +63,11 @@ export class DirectivosController {
     @UploadedFile() file: Express.Multer.File,
     @Body() body: any,
   ) {
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
-    const imagenUrl = file ? file.path : body.imagen; // ✅ correcto// 👈 mantiene la imagen si no cambia
+    const imagenUrl = file ? file.path : null; // ✅ correcto// 👈 mantiene la imagen si no cambia
 
     return this.service.update(id, {
       ...body,
 
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
       imagen: imagenUrl,
     });
   }

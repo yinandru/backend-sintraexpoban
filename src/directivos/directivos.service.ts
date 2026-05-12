@@ -18,8 +18,23 @@ export class DirectivosService {
     return this.repo.save(data);
   }
 
-  update(id: number, data: any) {
-    return this.repo.update(id, data);
+  async update(id: number, data: any) {
+    const directivo = await this.repo.findOneBy({ id });
+
+    if (!directivo) {
+      return null;
+    }
+
+    // ✅ Mantener imagen actual si no viene nueva
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+    if (!data.imagen) {
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+      data.imagen = directivo.imagen;
+    }
+
+    Object.assign(directivo, data);
+
+    return this.repo.save(directivo);
   }
 
   delete(id: number) {
