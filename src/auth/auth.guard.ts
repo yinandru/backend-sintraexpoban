@@ -33,7 +33,7 @@ export class AuthGuard implements CanActivate {
     try {
       // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
       const decoded = this.jwtService.verify(token, {
-        secret: 'secretKey', // 🔥 ESTA ES LA CLAVE
+        secret: process.env.JWT_SECRET,
       });
 
       console.log('✅ TOKEN OK 👉', decoded);
