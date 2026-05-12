@@ -1,3 +1,6 @@
+import * as dotenv from 'dotenv';
+dotenv.config();
+
 import { Module } from '@nestjs/common';
 import { JwtModule } from '@nestjs/jwt';
 import { AuthService } from './auth.service';
@@ -9,7 +12,7 @@ import { User } from './user.entity';
   imports: [
     TypeOrmModule.forFeature([User]),
     JwtModule.register({
-      secret: 'secretKey', // 👈 ESTA CLAVE
+      secret: process.env.JWT_SECRET, // 👈 ESTA CLAVE
       signOptions: { expiresIn: '1h' }, // ⏱ expira en 1 hora
     }),
   ],
