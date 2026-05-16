@@ -31,13 +31,10 @@ export class NoticiasController {
   @Post()
   @UseInterceptors(
     FileInterceptor('imagen', {
-      storage /* : diskStorage({
-        destination: './uploads',
-        filename: (req, file, cb) => {
-          const nombre = Date.now() + '-' + file.originalname;
-          cb(null, nombre);
-        },
-      }), */,
+      storage,
+      limits: {
+        fileSize: 20 * 1024 * 1024, // 20 MB
+      },
     }),
   )
   crear(@UploadedFile() file: any, @Body() body: any) {
@@ -65,6 +62,9 @@ export class NoticiasController {
   @UseInterceptors(
     FileInterceptor('imagen', {
       storage,
+      limits: {
+        fileSize: 20 * 1024 * 1024, // 20 MB
+      },
     }),
   )
   update(

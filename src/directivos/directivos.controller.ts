@@ -25,13 +25,15 @@ export class DirectivosController {
   findAll() {
     return this.service.findAll();
   }
-
   // 🔐 CREAR
   @UseGuards(AuthGuard)
   @Post()
   @UseInterceptors(
     FileInterceptor('imagen', {
       storage,
+      limits: {
+        fileSize: 20 * 1024 * 1024,
+      },
     }),
   )
   create(@UploadedFile() file: Express.Multer.File, @Body() body: any) {
@@ -56,6 +58,9 @@ export class DirectivosController {
   @UseInterceptors(
     FileInterceptor('imagen', {
       storage,
+      limits: {
+        fileSize: 20 * 1024 * 1024,
+      },
     }),
   )
   update(
